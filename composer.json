@@ -1,0 +1,23 @@
+{
+    "name": "indatus/laravel-ps-redis",
+    "description": "",
+    "authors": [
+        {
+            "name": "Damien Russell",
+            "email": "drussell@indatus.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.2.*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations"
+        ],
+        "psr-0": {
+            "Indatus\\LaravelPSRedis\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
