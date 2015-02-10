@@ -14,11 +14,15 @@
     },
     "autoload": {
         "classmap": [
-            "src/migrations"
+            "src/migrations",
+            "src/lib"
         ],
         "psr-0": {
             "Indatus\\LaravelPSRedis\\": "src/"
         }
+    },
+    "psr-4": {
+        "": "src/lib"
     },
     "minimum-stability": "stable"
 }

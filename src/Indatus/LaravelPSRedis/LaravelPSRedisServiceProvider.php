@@ -1,6 +1,7 @@
 <?php namespace Indatus\LaravelPSRedis;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Redis\Database;
 
 class LaravelPSRedisServiceProvider extends ServiceProvider {
 
@@ -11,6 +12,9 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	 */
 	protected $defer = false;
 
+	/** @var \Indatus\LaravelPSRedis\Driver $driver */
+	protected $driver;
+
 	/**
 	 * Bootstrap the application events.
 	 *
@@ -18,7 +22,11 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('indatus/laravel-ps-redis', 'PSRedis');
+		$this->package('indatus/laravel-ps-redis', 'Indatus/LaravelPSRedis');
+
+		// this has to be done in the boot method inorder for the driver class to
+		// have access to the config values
+		$this->driver = new Driver();
 	}
 
 	/**
@@ -28,7 +36,10 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		$this->app->bindShared('redis', function($app)
+		{
+			return new Database($this->driver->getConfig());
+		});
 	}
 
 	/**
@@ -38,7 +49,7 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array('laravel-PSRedis.psredis');
 	}
 
 }
