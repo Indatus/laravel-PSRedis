@@ -10,7 +10,11 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4.2.*",
+        "predis/predis": ">=1.0",
         "sparkcentral/psredis": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.*"
     },
     "autoload": {
         "classmap": [
