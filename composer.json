@@ -7,10 +7,15 @@
             "email": "drussell@indatus.com"
         }
     ],
+    "repositories": [
+        {
+            "url": "https://github.com/Olofguard/PSRedis.git",
+            "type": "git"
+        }
+    ],
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4.2.*",
-        "predis/predis": ">=1.0",
         "sparkcentral/psredis": "dev-master"
     },
     "require-dev": {
@@ -18,7 +23,6 @@
     },
     "autoload": {
         "classmap": [
-            "src/migrations",
             "src/lib"
         ],
         "psr-0": {
