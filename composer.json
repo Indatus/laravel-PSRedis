@@ -7,12 +7,6 @@
             "email": "drussell@indatus.com"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Olofguard/PSRedis"
-        }
-    ],
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4.2.*",
