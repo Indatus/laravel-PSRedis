@@ -10,7 +10,7 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	 *
 	 * @var bool
 	 */
-	protected $defer = false;
+	protected $defer = true;
 
 	/** @var \Indatus\LaravelPSRedis\Driver $driver */
 	protected $driver;

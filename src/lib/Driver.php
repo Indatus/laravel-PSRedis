@@ -4,6 +4,7 @@ use PSRedis\Client as PSRedisClient;
 use PSRedis\MasterDiscovery;
 use PSRedis\HAClient;
 use Config;
+use App;
 
 /**
  * Class Driver
@@ -27,15 +28,25 @@ class Driver
      */
     public function __construct()
     {
-        $this->masterDiscovery = new MasterDiscovery(Config::get('Indatus/LaravelPSRedis::nodeSetName'));
+        $this->masterDiscovery = App::make(
+            'PSRedis\MasterDiscovery',
+            [Config::get('Indatus/LaravelPSRedis::nodeSetName')]
+        );
 
         $clients = Config::get('Indatus/LaravelPSRedis::masters');
         foreach($clients as $client) {
-            $sentinel = new PSRedisClient($client['host'], $client['port']);
+            $sentinel = App::make(
+                'PSRedis\Client',
+                [$client['host'], $client['port']]
+            );
+
             $this->masterDiscovery->addSentinel($sentinel);
         }
 
-        $this->HAClient = new HAClient($this->masterDiscovery);
+        $this->HAClient = App::make(
+            'PSRedis\HAClient',
+            [$this->masterDiscovery]
+        );
     }
 
 
