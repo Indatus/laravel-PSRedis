@@ -9,14 +9,14 @@
     ],
     "repositories": [
         {
-            "url": "https://github.com/Olofguard/PSRedis",
-            "type": "vcs"
+            "type": "vcs",
+            "url": "https://github.com/Olofguard/PSRedis"
         }
     ],
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4.2.*",
-        "sparkcentral/psredis": "dev-older-predis"
+        "sparkcentral/psredis": "dev-bugfix"
     },
     "require-dev": {
         "phpunit/phpunit": "4.*"
