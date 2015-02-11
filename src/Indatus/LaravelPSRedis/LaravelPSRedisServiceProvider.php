@@ -26,7 +26,11 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 
 		// this has to be done in the boot method inorder for the driver class to
 		// have access to the config values
-		$this->driver = new Driver();
+		if (\Config::get('queue.default') === 'redis') {
+			$this->driver = new Driver();
+		} else {
+			$this->driver = null;
+		}
 	}
 
 	/**
@@ -36,10 +40,12 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->bindShared('redis', function($app)
-		{
-			return new Database($this->driver->getConfig());
-		});
+		if ( ! is_null($this->driver)) {
+			$this->app->bindShared('redis', function($app)
+			{
+				return new Database($this->driver->getConfig());
+			});
+		}
 	}
 
 	/**
