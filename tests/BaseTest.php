@@ -1,6 +1,7 @@
 <?php  namespace Tests\Indatus\LaravelPSRedis;
 
 use Illuminate\Foundation\Testing\TestCase;
+use Mockery as m;
 
 /**
  * Class BaseTest
@@ -21,6 +22,14 @@ abstract class BaseTest extends TestCase
      */
     public function createApplication()
     {
+        $unitTesting = true;
+        $testEnvironment = 'testing';
+
         return require __DIR__ . '/../../../../bootstrap/start.php';
+    }
+
+    public function tearDown()
+    {
+        m::close();
     }
 }

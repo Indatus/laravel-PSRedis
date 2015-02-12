@@ -2,6 +2,8 @@
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Redis\Database;
+use Config;
+use App;
 
 class LaravelPSRedisServiceProvider extends ServiceProvider {
 
@@ -26,7 +28,7 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 
 		// this has to be done in the boot method inorder for the driver class to
 		// have access to the config values
-		if (\Config::get('queue.default') === 'redis') {
+		if (Config::get('queue.default') === 'redis' && ( ! App::environment('testing'))) {
 			$this->driver = new Driver();
 		} else {
 			$this->driver = null;
