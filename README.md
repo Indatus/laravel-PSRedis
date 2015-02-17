@@ -4,7 +4,21 @@ A simple sentinel/redis driver wrapper for laravel.
 
 The default laravel redis driver supports redis clusters, however, it does not support high availability with redis, which is where Laravel-PSRedis comes to the rescue. 
 
-## Installation for Laravel 5
+## README Contents
+
+* [Installation](#installation)
+  * [Laravel 5 Installation](#installation-for-Laravel-5)
+  * [Laravel 4 Installation](#installation-for-Laravel-4)
+* [Configuration](#configuration)
+  * [Service Provider](#the-service-provider)
+* [Testing](#testing)
+* [License](#license)
+
+<a name="installation" />
+## Installation
+
+<a name="installation-for-Laravel-5" />
+### Installation for Laravel 5
 
 You can install Laravel-PSRedis easily with composer.
 
@@ -14,7 +28,8 @@ You can install Laravel-PSRedis easily with composer.
     },
 ```
 
-## Installation for Laravel 4
+<a name="installation-for-Laravel-4" />
+### Installation for Laravel 4
 
 If you're using Laravel 4 then the installation is slightly different. Laravel-PSRedis depends on `sparkcentral/psredis` which requires `'predis/predis': '>=1.0'` in it's stable release. I've taken the liberty of forking `sparkcentral/psredis` and rolling back `predis/predis` to `0.8.7`
 which is required by laravel 4. To utilize this fork simply require both `indatus\larave-ps-redis` and `sparkcentral/psredis` in your composer.json. And add a repository to point to the fork. Like so:
@@ -34,6 +49,7 @@ which is required by laravel 4. To utilize this fork simply require both `indatu
 
 This will help composer form an installable set of packages, otherwise composer complains about laravel needing `predis/predis` at version `0.8.7` while `sparkcentral/psredis` is installing `1.0.*`.
 
+<a name="configuration" />
 ## Configuration
 
 Once you have the package installed, it's time to configure it. First you'll need to publish the config files. 
@@ -69,8 +85,8 @@ return [
     ]
 ];
 ```
-
-#### The Service Provider
+<a name="the-service-provider" />
+### The Service Provider
 
 Finally, you just need to add the service provider to the providers array in `app.php`. 
 
@@ -89,7 +105,7 @@ Finally, you just need to add the service provider to the providers array in `ap
 
 > Note: you may have to `composer dump-autoload` after adding the service provider
 
-
+<a name="testing" />
 ## Testing
 
 Feel free to clone the repo and run the unit tests locally. 
@@ -98,5 +114,6 @@ Feel free to clone the repo and run the unit tests locally.
 	./vendor/bin/phpunit -c ./phpunit.xml 
 ```
 
+<a name="license" />
 ## License
 [The MIT License (MIT)](https://github.com/Indatus/laravel-PSRedis/blob/master/LICENSE)
