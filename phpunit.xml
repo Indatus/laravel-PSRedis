@@ -20,6 +20,8 @@
         <blacklist>
             <directory>./vendor</directory>
         </blacklist>
+        <whitelist>
+            <directory>./src/lib</directory>
+        </whitelist>
     </filter>
-
 </phpunit>
