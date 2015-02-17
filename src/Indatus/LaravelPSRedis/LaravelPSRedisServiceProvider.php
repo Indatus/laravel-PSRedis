@@ -25,14 +25,6 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		$this->package('indatus/laravel-ps-redis', 'Indatus/LaravelPSRedis');
-
-		// this has to be done in the boot method inorder for the driver class to
-		// have access to the config values
-		if (Config::get('queue.default') === 'redis' && ( ! App::environment('testing'))) {
-			$this->driver = new Driver();
-		} else {
-			$this->driver = null;
-		}
 	}
 
 	/**
@@ -42,12 +34,15 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		if ( ! is_null($this->driver)) {
-			$this->app->bindShared('redis', function($app)
-			{
-				return new Database($this->driver->getConfig());
-			});
-		}
+		$this->app->bindShared('redis', function ($app) {
+			if ( ($app['config']['queue.default'] === 'redis') && ( ! App::environment('testing')) ) {
+				$this->driver = new Driver();
+
+				if ( ! is_null($this->driver)) {
+					return new Database($this->driver->getConfig());
+				}
+			}
+		});
 	}
 
 	/**
