@@ -87,7 +87,7 @@ class DriverTest extends BaseTest
     }
 
     /**
-     * The instantiates method will run before each class to ensure
+     * Can we instantiate the class?
      *
      * @test
      */
@@ -98,6 +98,8 @@ class DriverTest extends BaseTest
     }
 
     /**
+     * Can it get the proper config array?
+     *
      * @test
      */
     public function it_gets_config_values()
