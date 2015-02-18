@@ -52,7 +52,7 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array('laravel-PSRedis.psredis');
+		return array('redis');
 	}
 
 }
