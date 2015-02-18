@@ -88,7 +88,8 @@ return [
 <a name="the-service-provider" />
 ### The Service Provider
 
-Finally, you just need to add the service provider to the providers array in `app.php`. 
+Finally, you just need to add the service provider to the providers array in `app.php` and comment or remove the
+redis service provider. 
 
 ```
 	/*
@@ -99,7 +100,8 @@ Finally, you just need to add the service provider to the providers array in `ap
     */
 	'providers' => [
 		...
-		'Indatus\LaravelPSRedis\LaravelPSRedisServiceProvider
+		// 'Illuminate\Redis\RedisServiceProvider', # comment this out
+		'Indatus\LaravelPSRedis\LaravelPSRedisServiceProvider # add this
 	],
 ```
 
