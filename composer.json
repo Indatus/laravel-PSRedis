@@ -1,6 +1,6 @@
 {
     "name": "indatus/laravel-ps-redis",
-    "description": "",
+    "description": "A simple sentinel/redis driver wrapper for laravel.",
     "authors": [
         {
             "name": "Damien Russell",
