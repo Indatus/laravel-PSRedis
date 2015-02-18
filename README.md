@@ -11,6 +11,7 @@ The default laravel redis driver supports redis clusters, however, it does not s
   * [Laravel 4 Installation](#installation-for-Laravel-4)
 * [Configuration](#configuration)
   * [Service Provider](#the-service-provider)
+* [Contributing](#contributing);
 * [Testing](#testing)
 * [License](#license)
 
@@ -104,6 +105,15 @@ Finally, you just need to add the service provider to the providers array in `ap
 ```
 
 > Note: you may have to `composer dump-autoload` after adding the service provider
+
+<a name="contributing" />
+## Contributing
+
+1. Fork it
+2. Create your feature branch (git checkout -b my-new-feature)
+3. Commit your changes (git commit -m 'Added some feature')
+4. Push to the branch (git push origin my-new-feature)
+5. Create new Pull Request
 
 <a name="testing" />
 ## Testing
