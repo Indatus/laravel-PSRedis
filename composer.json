@@ -28,5 +28,6 @@
     "psr-4": {
         "": "src/lib"
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "license": "MIT"
 }
