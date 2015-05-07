@@ -1,10 +1,12 @@
 <?php namespace Indatus\LaravelPSRedis;
 
+use Illuminate\Foundation\Application;
 use PSRedis\Client as PSRedisClient;
 use PSRedis\MasterDiscovery;
 use PSRedis\HAClient;
 use Config;
 use App;
+use PSRedis\MasterDiscovery\BackoffStrategy\Incremental;
 
 /**
  * Class Driver
@@ -28,20 +30,9 @@ class Driver
      */
     public function __construct()
     {
-        $this->masterDiscovery = App::make(
-            'PSRedis\MasterDiscovery',
-            [Config::get('Indatus/LaravelPSRedis::nodeSetName')]
-        );
+        $this->setUpMasterDiscovery();
 
-        $clients = Config::get('Indatus/LaravelPSRedis::masters');
-        foreach($clients as $client) {
-            $sentinel = App::make(
-                'PSRedis\Client',
-                [$client['host'], $client['port']]
-            );
-
-            $this->masterDiscovery->addSentinel($sentinel);
-        }
+        $this->addSentinels();
 
         $this->HAClient = App::make(
             'PSRedis\HAClient',
@@ -58,11 +49,52 @@ class Driver
     public function getConfig()
     {
         return [
-            'cluster' => Config::get('Indatus/LaravelPSRedis::cluster'),
+            'cluster' => Config::get('database.redis.cluster'),
             'default' => [
                 'host' => $this->HAClient->getIpAddress(),
                 'port' => $this->HAClient->getPort()
             ]
         ];
+    }
+
+    public function getBackOffStrategy()
+    {
+        /** @var array $backOffConfig */
+        $backOffConfig = Config::get('database.redis.backoff-strategy');
+
+        /** @var Incremental $incrementalBackOff */
+        $incrementalBackOff = App::make(
+            'PSRedis\MasterDiscovery\BackoffStrategy\Incremental', [
+                $backOffConfig['wait-time'],
+                $backOffConfig['increment']
+            ]
+        );
+
+        $incrementalBackOff->setMaxAttempts($backOffConfig['max-attempts']);
+
+        return $incrementalBackOff;
+    }
+
+    public function setUpMasterDiscovery()
+    {
+        $this->masterDiscovery = App::make(
+            'PSRedis\MasterDiscovery',
+            [Config::get('database.redis.nodeSetName')]
+        );
+
+        $this->masterDiscovery->setBackoffStrategy($this->getBackOffStrategy());
+    }
+
+    public function addSentinels()
+    {
+        $clients = Config::get('database.redis.masters');
+        foreach($clients as $client) {
+            $sentinel = App::make(
+                'PSRedis\Client',
+                [$client['host'], $client['port']]
+            );
+
+            $this->masterDiscovery->addSentinel($sentinel);
+        }
     }
 }

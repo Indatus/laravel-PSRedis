@@ -4,6 +4,12 @@ A simple sentinel/redis driver wrapper for laravel.
 
 The default laravel redis driver supports redis clusters, however, it does not support high availability with redis, which is where Laravel-PSRedis comes to the rescue. 
 
+With Laravel-PSRedis you'll get all the laravel redis magic that you aleady have such 
+as `Redis::set()` and `Redis::get()`, and even session, queue, and cache support using redis,
+you'll just be able to leverage High Avaliability redis instances instead of a simple cluster.
+
+We do this by asking your [Redis Sentinels](http://redis.io/topics/sentinel) the location of your master before creating our Redis bindings in the IOC Container. By doing this we ensure anytime your app has a connection to your redis instance, that connection is to master. 
+
 ## README Contents
 
 * [Installation](#installation)
@@ -51,41 +57,64 @@ which is required by laravel 4. To utilize this fork simply require both `indatu
 This will help composer form an installable set of packages, otherwise composer complains about laravel needing `predis/predis` at version `0.8.7` while `sparkcentral/psredis` is installing `1.0.*`.
 
 <a name="configuration" />
-## Configuration
+## Configuration 
 
-Once you have the package installed, it's time to configure it. First you'll need to publish the config files. 
+Next, just fill in your sentinel/redis server info in the `app/config/database.php` config files that already exist in your application. 
 
-```
-	php artisan config:publish indatus/laravel-ps-redis  
-```
-
-This will add the appropriate config files to laravel's `app/config/packages` directory. 
-
-Next, just fill in your sentinel/redis server info in the newly added config files. You should see environment speicifc directories for staging, production, and demo under `app/config/packages/indatus/laravel-ps-redis`. Feel free to add more for you specific environments like `local`
-
-Fill in the appropriate config files here and you're almost done. 
+You may already have some default laravel config values in place in your database config file that looks like this.
 
 ```
-return [
+/*
+	|--------------------------------------------------------------------------
+	| Redis Databases
+	|--------------------------------------------------------------------------
+	|
+	| Redis is an open source, fast, and advanced key-value store that also
+	| provides a richer set of commands than a typical key-value systems
+	| such as APC or Memcached. Laravel makes it easy to dig right in.
+	|
+	*/
+	'redis' => [
+		'cluster' => false,
+		'default' => [
+			'host'     => '127.0.0.1',
+			'port'     => 6379,
+			'database' => 0,
+		],
+	],
+``` 
 
-    /** the name of the redis node set */
-    'nodeSetName' => 'sentinel-node-set',
+Just overwrite those with the values below and fill in your server info.
 
-    'cluster' => false,
-
-    /** Array of sentinels */
-    'masters' => [
-        [
-            'host' => 'sentinel-instance.domain.com',
-            'port' => '26379',
-        ],
-        [
-            'host' => 'another-',
-            'port' => '26379',
-        ]
-    ]
-];
 ```
+	'redis' => [
+
+   		/** the name of the redis node set */
+    	'nodeSetName' => 'sentinel-node-set',
+
+    	'cluster' => false,
+
+	    /** Array of sentinels */
+	    'masters' => [
+	        [
+	            'host' => 'sentinel-instance.domain.com',
+	            'port' => '26379',
+	        ],
+	        [
+            	'host' => 'sentinel-instance.domain.com',
+        	    'port' => '26379',
+    	    ]
+	    ],
+    
+    	/** how long to wait and try again if we fail to connect to master */
+	    'backoff-strategy' => [
+			'max-attempts' => 10, // the maximum-number of attempt possible to find master
+			'wait-time' => 500,   // miliseconds to wait for the next attempt
+			'increment' => 1.5, // multiplier used to increment the back off time on each try
+    	]
+    ];  
+```
+
 <a name="the-service-provider" />
 ### The Service Provider
 
