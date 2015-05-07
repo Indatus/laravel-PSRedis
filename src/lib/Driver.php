@@ -1,5 +1,6 @@
 <?php namespace Indatus\LaravelPSRedis;
 
+use Illuminate\Foundation\Application;
 use PSRedis\Client as PSRedisClient;
 use PSRedis\MasterDiscovery;
 use PSRedis\HAClient;
@@ -26,14 +27,16 @@ class Driver
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Application $app)
     {
+        $this->app = $app;
+
         $this->masterDiscovery = App::make(
             'PSRedis\MasterDiscovery',
-            [Config::get('Indatus/LaravelPSRedis::nodeSetName')]
+            [$this->app['config']['database.redis.nodeSetName']]
         );
 
-        $clients = Config::get('Indatus/LaravelPSRedis::masters');
+        $clients = $this->app['config']['database.redis.masters'];
         foreach($clients as $client) {
             $sentinel = App::make(
                 'PSRedis\Client',
@@ -58,7 +61,7 @@ class Driver
     public function getConfig()
     {
         return [
-            'cluster' => Config::get('Indatus/LaravelPSRedis::cluster'),
+            'cluster' => $this->app['config']['database.redis.cluster'],
             'default' => [
                 'host' => $this->HAClient->getIpAddress(),
                 'port' => $this->HAClient->getPort()
