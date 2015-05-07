@@ -17,7 +17,6 @@ class DriverTest extends BaseTest
     protected $driverUnderTest;
 
     /** @var array */
-
     protected $masters;
 
     /** @var \Mockery\MockInterface */
@@ -28,6 +27,12 @@ class DriverTest extends BaseTest
 
     /** @var \Mockery\MockInterface */
     protected $PSRedisClient;
+
+    /** @var array */
+    protected $backOffStrategy;
+
+    /** @var \Mockery\MockInterface */
+    protected $incremental;
 
     public function setUp()
     {
@@ -51,39 +56,20 @@ class DriverTest extends BaseTest
             ]
         ];
 
-        $this->masterDiscovery = m::mock('PSRedis\MasterDiscovery');
+        $this->backOffStrategy = [
+            'max-attempts' => 10, // the maximum-number of attempt possible to find master
+            'wait-time' => 500,   // miliseconds to wait for the next attempt
+            'increment' => 1.5, // multiplier used to increment the back off time on each try
+        ];
+
+        $this->masterDiscovery = m::mock('PSRedis\MasterDiscovery')->makePartial();
         $this->app->instance('PSRedis\MasterDiscovery', $this->masterDiscovery);
 
-        $this->HAClient = m::mock('PSRedis\HAClient')->makePartial();;
+        $this->HAClient = m::mock('PSRedis\HAClient')->makePartial();
         $this->app->instance('PSRedis\HAClient', $this->HAClient);
 
         $this->PSRedisClient = m::mock('PSRedis\Client');
         $this->app->instance('PSRedis\Client', $this->PSRedisClient);
-
-        Config::shouldReceive('get')->once()->with('Indatus/LaravelPSRedis::nodeSetName')->andReturn('node-set');
-        Config::shouldReceive('get')->once()->with('Indatus/LaravelPSRedis::masters')->andReturn($this->masters);
-
-        $this->masterDiscovery->shouldReceive('addSentinel')->twice()->with($this->PSRedisClient);
-
-        App::shouldReceive('make')
-            ->once()
-            ->with('PSRedis\MasterDiscovery', ['node-set'])
-            ->andReturn($this->masterDiscovery);
-
-        App::shouldReceive('make')
-            ->once()
-            ->with('PSRedis\Client', [$this->masters[0]['host'], $this->masters[0]['port']])
-            ->andReturn($this->PSRedisClient);
-
-        App::shouldReceive('make')
-            ->once()
-            ->with('PSRedis\Client', [$this->masters[1]['host'], $this->masters[1]['port']])
-            ->andReturn($this->PSRedisClient);
-
-        App::shouldReceive('make')
-            ->once()
-            ->with('PSRedis\HAClient', [$this->masterDiscovery])
-            ->andReturn($this->HAClient);
     }
 
     /**
@@ -93,7 +79,12 @@ class DriverTest extends BaseTest
      */
     public function it_instantiates()
     {
+        Config::shouldReceive('get')->once()->with('database.redis.nodeSetName')->andReturn('node-set');
+        Config::shouldReceive('get')->once()->with('database.redis.masters')->andReturn($this->masters);
+        Config::shouldReceive('get')->with('database.redis.backoff-strategy')->andReturn($this->backOffStrategy);
+
         $this->driverUnderTest = new Driver();
+
         $this->assertInstanceOf('Indatus\LaravelPSRedis\Driver', $this->driverUnderTest);
     }
 
@@ -112,11 +103,16 @@ class DriverTest extends BaseTest
             ]
         ];
 
-        Config::shouldReceive('get')->with('Indatus/LaravelPSRedis::cluster')->andReturn(false);
+        Config::shouldReceive('get')->once()->with('database.redis.nodeSetName')->andReturn('node-set');
+        Config::shouldReceive('get')->once()->with('database.redis.masters')->andReturn($this->masters);
+        Config::shouldReceive('get')->with('database.redis.backoff-strategy')->andReturn($this->backOffStrategy);
+        Config::shouldReceive('get')->with('database.redis.cluster')->andReturn(false);
+
         $this->HAClient->shouldReceive('getIpAddress')->once()->andReturn($this->masters[0]['host']);
         $this->HAClient->shouldReceive('getPort')->once()->andReturn($this->masters[0]['port']);
 
         $this->driverUnderTest = new Driver();
+
         $configUnderTest = $this->driverUnderTest->getConfig();
 
         $this->assertEquals($expectedConfig, $configUnderTest);
