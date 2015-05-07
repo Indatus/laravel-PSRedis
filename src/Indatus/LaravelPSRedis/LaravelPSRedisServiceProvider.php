@@ -2,8 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Redis\Database;
-use Config;
-use App;
+use Illuminate\Session\SessionManager;
 
 class LaravelPSRedisServiceProvider extends ServiceProvider {
 
@@ -14,10 +13,6 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	 */
 	protected $defer = true;
 
-	/** @var \Indatus\LaravelPSRedis\Driver $driver */
-	protected $driver;
-
-
 	/**
 	 * Register the service provider.
 	 *
@@ -25,15 +20,32 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->bindShared('redis', function ($app) {
-			if ( ($app['config']['queue.default'] === 'redis')) {
-				$this->driver = new Driver($app);
+		if ( $this->shouldProvidePSRedis() ) {
+			$this->app->bindShared('redis', function () {
+				$driver = new Driver();
+				return new Database($driver->getConfig());
+			});
+		}
+	}
 
-				if ( ! is_null($this->driver)) {
-					return new Database($this->driver->getConfig());
-				}
-			}
-		});
+	/**
+	 * Determine if we need to bind redis to the ioc container.
+	 *
+	 * @return bool
+	 */
+	public function shouldProvidePSRedis()
+	{
+		$configs = [
+			$this->app['config']['queue.default'],
+			$this->app['config']['cache.driver'],
+			$this->app['config']['session.driver']
+		];
+
+		if (in_array('redis', $configs)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
