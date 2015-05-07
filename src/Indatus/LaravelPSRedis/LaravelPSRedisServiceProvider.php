@@ -17,15 +17,6 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	/** @var \Indatus\LaravelPSRedis\Driver $driver */
 	protected $driver;
 
-	/**
-	 * Bootstrap the application events.
-	 *
-	 * @return void
-	 */
-	public function boot()
-	{
-		$this->package('indatus/laravel-ps-redis', 'Indatus/LaravelPSRedis');
-	}
 
 	/**
 	 * Register the service provider.
@@ -35,8 +26,8 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		$this->app->bindShared('redis', function ($app) {
-			if ( ($app['config']['queue.default'] === 'redis') && ( ! App::environment('testing')) ) {
-				$this->driver = new Driver();
+			if ( ($app['config']['queue.default'] === 'redis')) {
+				$this->driver = new Driver($app);
 
 				if ( ! is_null($this->driver)) {
 					return new Database($this->driver->getConfig());
