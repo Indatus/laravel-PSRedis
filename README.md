@@ -131,7 +131,7 @@ redis service provider.
 	'providers' => [
 		...
 		// 'Illuminate\Redis\RedisServiceProvider', # comment this out
-		'Indatus\LaravelPSRedis\LaravelPSRedisServiceProvider # add this
+		'Indatus\LaravelPSRedis\LaravelPSRedisServiceProvider' # add this
 	],
 ```
 
