@@ -1,5 +1,5 @@
 {
-    "name": "indatus/laravel-ps-redis",
+    "name": "geniuslinchao/laravel-PSRedis",
     "description": "A simple sentinel/redis driver wrapper for laravel.",
     "authors": [
         {
@@ -9,11 +9,11 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": ">=4.2.*",
+        "illuminate/support": ">=4.2.26",
         "sparkcentral/psredis": "dev-master"
     },
     "require-dev": {
-        "laravel/framework": ">=4.2.*",
+        "laravel/framework": ">=4.2.26",
         "phpunit/phpunit": "4.*",
         "mockery/mockery": "0.9.*@dev"
     },
