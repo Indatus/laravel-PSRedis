@@ -20,32 +20,10 @@ class LaravelPSRedisServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		if ( $this->shouldProvidePSRedis() ) {
-			$this->app->bindShared('redis', function () {
-				$driver = new Driver();
-				return new Database($driver->getConfig());
-			});
-		}
-	}
-
-	/**
-	 * Determine if we need to bind redis to the ioc container.
-	 *
-	 * @return bool
-	 */
-	public function shouldProvidePSRedis()
-	{
-		$configs = [
-			$this->app['config']['queue.default'],
-			$this->app['config']['cache.driver'],
-			$this->app['config']['session.driver']
-		];
-
-		if (in_array('redis', $configs)) {
-			return true;
-		}
-
-		return false;
+		$this->app->singleton('redis', function () {
+			$driver = new Driver();
+			return new Database($driver->getConfig());
+		});
 	}
 
 	/**
