@@ -1,11 +1,10 @@
 <?php namespace Indatus\LaravelPSRedis;
 
-use Illuminate\Foundation\Application;
 use PSRedis\Client as PSRedisClient;
 use PSRedis\MasterDiscovery;
 use PSRedis\HAClient;
-use Config;
-use App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\App;
 use PSRedis\MasterDiscovery\BackoffStrategy\Incremental;
 
 /**
