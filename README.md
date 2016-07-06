@@ -31,7 +31,7 @@ You can install Laravel-PSRedis easily with composer.
 
 ```
 	"require": {  
-        "indatus/laravel-ps-redis": "dev-master",
+        "indatus/laravel-ps-redis": "^1.2",
     },
 ```
 
