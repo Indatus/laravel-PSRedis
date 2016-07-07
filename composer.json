@@ -10,7 +10,7 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "5.*",
-        "sparkcentral/psredis": "dev-master"
+        "jamescauwelier/psredis": "~1.1"
     },
     "require-dev": {
         "laravel/framework": "5.*",
