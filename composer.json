@@ -1,32 +1,25 @@
 {
-    "name": "indatus/laravel-ps-redis",
+    "name": "paunin/laravel-ps-redis",
     "description": "A simple sentinel/redis driver wrapper for laravel.",
     "authors": [
         {
             "name": "Damien Russell",
             "email": "drussell@indatus.com"
+        },
+        {
+            "name": "Dmitriy Paunin",
+            "email": "d.m.paunin@gmail.com"
         }
     ],
     "require": {
         "php": ">=5.6.0",
-        "illuminate/support": "5.*",
+        "illuminate/support": "~5.4",
         "jamescauwelier/psredis": "~1.1"
     },
-    "require-dev": {
-        "laravel/framework": "5.*",
-        "phpunit/phpunit": "4.*",
-        "mockery/mockery": "0.9.*"
-    },
     "autoload": {
-        "classmap": [
-            "src/lib"
-        ],
         "psr-0": {
-            "Indatus\\LaravelPSRedis\\": "src/"
+            "LaravelPSRedis\\": "src/"
         }
-    },
-    "psr-4": {
-        "": "src/lib"
     },
     "minimum-stability": "stable",
     "license": "MIT"

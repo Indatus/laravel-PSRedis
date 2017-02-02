@@ -1,4 +1,5 @@
-<?php namespace Indatus\LaravelPSRedis;
+<?php
+namespace LaravelPSRedis;
 
 use Illuminate\Redis\RedisManager;
 use Illuminate\Support\ServiceProvider;
