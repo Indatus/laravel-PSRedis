@@ -1,5 +1,7 @@
 # Laravel-PSRedis
 
+__! Only for laravel/lumen >= 5.4, for previous laravel/lumen versions use 1.* version of the package https://github.com/Indatus/laravel-PSRedis__
+
 A simple sentinel/redis driver wrapper for laravel. 
 
 The default laravel redis driver supports redis clusters, however, it does not support high availability with redis, which is where Laravel-PSRedis comes to the rescue. 

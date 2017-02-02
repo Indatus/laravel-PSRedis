@@ -116,7 +116,7 @@ class Driver
      *
      * @return mixed
      */
-    protected function getSettings($name, $default)
+    protected function getSettings($name, $default = null)
     {
         return Config::get($this->rootConfigPath . '.' . $name, $default);
     }
