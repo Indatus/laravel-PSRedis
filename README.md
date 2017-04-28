@@ -1,6 +1,6 @@
 # Laravel-PSRedis
 
-> For Laravel/Lumen >= 5.4 see https://github.com/paunin/laravel-PSRedis
+> DEPRECATED, see https://github.com/laravel/framework/pull/18850 for built-in sentinel support
 
 A simple sentinel/redis driver wrapper for laravel. 
 
